@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coffee Origins Split Slider</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#2A1A12;--accent:#C4512E;--panel:#F4E6D2}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;overflow:hidden;background:#F4E6D2}
+  body{font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+
+  .cs{position:relative;width:100%;height:100vh;height:100svh;min-height:600px;overflow:hidden;color:var(--ink);user-select:none}
+
+  /* ---------- left: bag stage ---------- */
+  .cs-stage{position:absolute;left:0;top:0;width:50%;height:100%;overflow:hidden;--s:1}
+  .cs-slide{position:absolute;inset:0;visibility:hidden}
+  .cs-bg{position:absolute;inset:0;background-size:cover;background-position:center;will-change:transform}
+  .cs-scene{position:absolute;left:50%;top:50%;width:720px;height:840px;transform:translate(-50%,-50%) scale(var(--s))}
+
+  .word{position:absolute;left:0;top:450px;width:720px;display:flex;justify-content:center;white-space:nowrap;font:400 190px/1.12 Anton,Impact,sans-serif}
+  .word .ch{display:block;overflow:hidden}
+  .word .ch > span{display:block;color:var(--wordc)}
+  .shadow{position:absolute;left:150px;top:712px;width:420px;height:64px;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.34),rgba(0,0,0,0))}
+  .bean{position:absolute}
+  .bean svg,.bean img{display:block;filter:drop-shadow(0 6px 6px rgba(0,0,0,.25))}
+  .bean.far img{filter:blur(1.6px) drop-shadow(0 4px 5px rgba(0,0,0,.18))}
+  .bag{position:absolute;left:169.5px;top:170px;width:381px;height:560px;transform-origin:80% 10%;will-change:transform}
+  .bag-p,.bag-f{width:100%;height:100%}
+  .bag svg,.bag img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 34px 38px rgba(0,0,0,.28))}
+  .badge{position:absolute;left:531px;top:171px;width:118px;height:118px}
+  .badge > svg{width:100%;height:100%;animation:spin 16s linear infinite}
+  .badge-core{position:absolute;inset:31%;border-radius:50%;display:grid;place-items:center}
+  .badge-core svg{width:42%;height:auto}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* ---------- right: copy panel ---------- */
+  .cs-panel{position:absolute;right:0;top:0;width:50%;height:100%;overflow:hidden;background:var(--panel)}
+  .cs-panel-wipe{position:absolute;inset:0;transform:translateY(-101%)}
+  .cs-copy{position:absolute;left:20.8%;top:50%;transform:translateY(-46%);width:min(440px,66%);display:grid}
+  .cs-text{grid-area:1/1;visibility:hidden}
+  .m{display:block;overflow:hidden}
+  .m > *{display:block;will-change:transform}
+
+  .cs-count{position:relative;width:46px;height:60px}
+  .cs-count .m{position:absolute}
+  .cs-count i{font:400 17px/24px Inter,sans-serif;font-style:normal}
+  .m-n1{left:0;top:0}
+  .m-ln{left:-1px;top:8px;width:43px;height:43px}
+  .m-ln .ln{width:100%;height:100%;background:linear-gradient(to bottom right,transparent calc(50% - .6px),var(--accent) 50%,transparent calc(50% + .6px))}
+  .m-n2{left:21px;top:35px}
+
+  .cs-eyebrow{margin-top:18px}
+  .cs-eyebrow span{font:600 11.5px/1.3 Inter,sans-serif;letter-spacing:.22em;text-transform:uppercase;color:var(--accent)}
+  .cs-title{margin:10px 0 0;padding-bottom:.08em}
+  .cs-title span{font:400 clamp(40px,3.9vw,62px)/1.02 "DM Serif Display",Georgia,serif;letter-spacing:-.01em}
+  .cs-title em{color:var(--accent)}
+  .cs-desc{margin:16px 0 0}
+  .cs-desc span{font:400 15px/1.65 Inter,sans-serif;opacity:.85}
+  .cs-notes{list-style:none;margin:18px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+  .cs-notes li{padding:8px 14px;border-radius:99px;border:1px solid color-mix(in srgb,var(--ink) 28%,transparent);font:500 11.5px/1 Inter,sans-serif;letter-spacing:.03em}
+  .cs-bars{margin-top:20px;display:grid;gap:9px;max-width:340px}
+  .bar{display:grid;grid-template-columns:86px 1fr 24px;align-items:center;gap:14px;font:600 10px/1 Inter,sans-serif;letter-spacing:.14em;text-transform:uppercase}
+  .bar > span:last-child{text-align:right;opacity:.7;letter-spacing:0}
+  .bar-t{position:relative;height:3px;overflow:hidden;background:color-mix(in srgb,var(--ink) 14%,transparent)}
+  .bar-t i{position:absolute;inset:0;background:var(--accent);transform-origin:left;transform:scaleX(0)}
+  .cs-buy{margin-top:26px;padding-bottom:4px}
+  .cs-buy-in{display:flex !important;align-items:center;gap:24px;flex-wrap:wrap}
+  .price{font:400 32px/1 "DM Serif Display",Georgia,serif}
+  .price small{font:500 12.5px/1 Inter,sans-serif;opacity:.65;margin-left:4px}
+  .cs-btn{display:inline-flex;align-items:center;gap:12px;height:50px;padding:0 26px;background:var(--ink);color:var(--panel);text-decoration:none;
+          font:600 12px/1 Inter,sans-serif;letter-spacing:.12em;text-transform:uppercase;transition:background .3s,color .3s}
+  .cs-btn svg{width:18px;height:18px;transition:transform .35s}
+  .cs-btn:hover{background:var(--accent)}
+  .cs-btn:hover svg{transform:translateX(4px)}
+
+  /* ---------- middle line: country picker ---------- */
+  .cs-origins{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:20;display:flex;flex-direction:column;gap:20px}
+  .org{position:relative;width:54px;height:54px;padding:0;border:0;background:none;cursor:pointer;display:grid;place-items:center;outline:none}
+  .org-flag{width:38px;height:38px;border-radius:50%;box-shadow:0 0 0 3px var(--panel),0 8px 16px rgba(0,0,0,.2);transition:transform .45s cubic-bezier(.3,1.6,.5,1)}
+  .org:hover .org-flag,.org:focus-visible .org-flag{transform:scale(1.08)}
+  .org.is-active .org-flag{transform:scale(1.16)}
+  .org-ring{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);overflow:visible}
+  .org-ring circle{fill:none;stroke:var(--accent);stroke-width:2.2;stroke-dasharray:1;stroke-dashoffset:1;opacity:0;transition:opacity .3s}
+  .org.is-active .org-ring circle{opacity:1}
+  .org-label{position:absolute;right:calc(100% + 8px);top:50%;transform:translate(10px,-50%);opacity:0;pointer-events:none;white-space:nowrap;
+             padding:9px 15px;border-radius:99px;background:var(--panel);color:var(--ink);font:600 11px/1 Inter,sans-serif;letter-spacing:.16em;text-transform:uppercase;
+             box-shadow:0 8px 20px -8px rgba(0,0,0,.3);transition:opacity .35s,transform .45s cubic-bezier(.2,.8,.2,1)}
+  .org:hover .org-label,.org:focus-visible .org-label,.org.is-active .org-label{opacity:1;transform:translate(0,-50%)}
+
+  /* ---------- chrome ---------- */
+  .cs-top{position:absolute;left:64px;right:60px;top:38px;z-index:20;display:flex;align-items:center;justify-content:space-between;pointer-events:none}
+  .cs-top > *{pointer-events:auto}
+  .logo{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none;font:400 25px/1 "DM Serif Display",Georgia,serif}
+  .logo svg{width:22px;height:26px;color:var(--accent)}
+  .nav{display:flex;align-items:center;gap:32px}
+  .nav a{color:var(--ink);text-decoration:none;font:500 13px/1 Inter,sans-serif;letter-spacing:.05em}
+  .menu{display:flex;gap:32px}
+  .menu a{opacity:.8;transition:opacity .3s}
+  .menu a:hover{opacity:1}
+  .cart{display:flex;align-items:center;gap:10px}
+  .cart b{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--panel);font-size:11px}
+
+  .cs-credit{position:absolute;left:78px;bottom:52px;z-index:20;transform-origin:left bottom;transform:rotate(-90deg) translateY(100%);
+             font:600 11px/1 Inter,sans-serif;letter-spacing:.24em;text-transform:uppercase;color:var(--ink);white-space:nowrap;opacity:.75}
+
+  .cs-arrows{position:absolute;right:60px;bottom:50px;z-index:20;display:flex;flex-direction:column}
+  .cs-arrow{width:60px;height:60px;padding:0;background:none;border:1px solid transparent;color:var(--ink);cursor:pointer;display:grid;place-items:center;transition:border-color .3s}
+  .cs-arrow:hover,.cs-arrow:focus-visible{border-color:var(--ink);outline:none}
+  .cs-arrow svg{width:14px;height:38px}
+
+  @media (max-width:860px){
+    .cs-stage{width:100%;height:52%}
+    .cs-panel{top:52%;width:100%;height:48%}
+    .cs-copy{left:22px;right:22px;width:auto;top:44px;transform:none}
+    .cs-count,.cs-bars{display:none}
+    .cs-eyebrow{margin-top:0}
+    .cs-title{margin-top:6px}
+    .cs-title span{font-size:32px}
+    .cs-desc{margin-top:8px}
+    .cs-desc span{font-size:13.5px;line-height:1.5}
+    .cs-notes{margin-top:10px}
+    .cs-notes li{padding:6px 10px;font-size:10.5px}
+    .cs-buy{margin-top:14px}
+    .price{font-size:24px}
+    .cs-btn{height:42px;padding:0 16px;font-size:11px}
+    .cs-top{left:20px;right:20px;top:20px}
+    .menu,.cart span,.cs-credit{display:none}
+    .cs-origins{top:52%;flex-direction:row;gap:6px}
+    .org{width:44px;height:44px}
+    .org-flag{width:32px;height:32px}
+    .org-label{display:none}
+    .cs-arrows{top:52%;bottom:auto;right:8px;transform:translateY(-50%);flex-direction:row}
+    .cs-arrow{width:40px;height:40px}
+    .cs-arrow svg{height:28px}
+  }
+</style>
+</head>
+<body>
+
+<div class="cs" id="cs">
+  <div class="cs-stage" id="stage"></div>
+  <div class="cs-panel" id="panel">
+    <div class="cs-panel-wipe" id="panelWipe"></div>
+    <div class="cs-copy" id="copy"></div>
+  </div>
+
+  <header class="cs-top">
+    <a class="logo" href="#"><svg viewBox="0 0 28 32" aria-hidden="true"><path fill="currentColor" d="M14 1c6 7 12 12 12 19.5a12 12 0 0 1-24 0c0-5 3-8.5 6.5-11.5 0 4 1.8 6.5 4.5 6.5C11 10 12 5.5 14 1z"/></svg><span id="brand"></span></a>
+    <nav class="nav" aria-label="Main">
+      <span class="menu"><a href="#">Shop</a><a href="#">Wholesale</a><a href="#">Our Roastery</a></span>
+      <a class="cart" href="#"><span>Cart</span><b>2</b></a>
+    </nav>
+  </header>
+
+  <div class="cs-credit">Small batch · Roasted weekly</div>
+  <nav class="cs-origins" id="origins" aria-label="Choose a country"></nav>
+  <div class="cs-arrows">
+    <button class="cs-arrow" id="prev" aria-label="Previous country"><svg viewBox="0 0 14 38"><path d="M7 37V1M1 7l6-6 6 6" fill="none" stroke="currentColor" stroke-width="1"/></svg></button>
+    <button class="cs-arrow" id="next" aria-label="Next country"><svg viewBox="0 0 14 38"><path d="M7 1v36M1 31l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1"/></svg></button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+/* =====================================================================
+   CONFIG — one entry per country (add or remove freely).
+   images.bag → transparent bag render (~0.68:1). images.beans → bean sprite set (light|medium). images.bg → optional
+   photo for the left half. Empty = built-in vector bag / flat colour.
+   flag → any CSS background (simplified flag stripes by default).
+   ===================================================================== */
+const BRAND = 'Ember & Oak';
+const AUTOPLAY = 8;          // seconds per country, 0 = off
+
+/* Countries + coffee names from kaleicoffee.com/collections/coffee-bags (see ORIGINS.md).
+   desc / notes / profile / roast / price / weight are PLACEHOLDERS — replace with the real product details. */
+const ORIGINS = [
+  { country:'Ethiopia', origin:'ETHIOPIA', region:'Gedeb', title:'Gedeb Washed', roast:'Light Roast', process:'Washed',
+    flag:'radial-gradient(circle,#0F47AF 0 24%,transparent 25%),linear-gradient(#078930 0 33.4%,#FCDD09 0 66.6%,#DA121A 0)',
+    desc:'A washed coffee from the Gedeb area of Ethiopia. Clean, bright and floral: the kind of cup that shows off what high-grown Ethiopian beans do best.',
+    notes:['Jasmine','Lemon zest','Honey'], profile:{ Acidity:85, Body:35, Sweetness:70 }, price:'$18', weight:'250 g',
+    theme:{ stage:'#EBCFA6', panel:'#F4E6D2', ink:'#2A1A12', accent:'#C4512E', bean:'#6B3A22', word:'rgba(196,81,46,.17)' },
+    bag:{ body:'#D9643A', label:'#F7ECDD', labelInk:'#3A2016' },
+    images:{ bag:'img/ethiopia-bag.png', bg:'img/ethiopia-bg.jpg', beans:'light' } },
+  { country:'Colombia', origin:'COLOMBIA', region:'Finca Monteblanco', title:'Monteblanco Geisha', roast:'Light Roast', process:'Geisha',
+    flag:'linear-gradient(#FCD116 0 50%,#003893 0 75%,#CE1126 0)',
+    desc:'Geisha grown at Finca Monteblanco in Colombia: a delicate, perfumed variety prized for its tea-like body and long, sweet finish.',
+    notes:['Bergamot','Peach','Rose'], profile:{ Acidity:75, Body:40, Sweetness:85 }, price:'$24', weight:'250 g',
+    theme:{ stage:'#B8CCB2', panel:'#DEE8D9', ink:'#14251E', accent:'#1F5A46', bean:'#5A3A24', word:'rgba(31,90,70,.16)' },
+    bag:{ body:'#1F5A46', label:'#EBDAB8', labelInk:'#16291F' },
+    images:{ bag:'img/colombia-bag.png', bg:'img/colombia-bg.jpg', beans:'light' } },
+  { country:'Brazil', origin:'BRAZIL', region:'', title:'Yellow Bob-o-link', roast:'Medium Roast', process:'Natural',
+    flag:'radial-gradient(circle,#002776 0 19%,transparent 20%),linear-gradient(to bottom right,transparent 50%,#FFDF00 0) 0 0/50% 50% no-repeat,linear-gradient(to bottom left,transparent 50%,#FFDF00 0) 100% 0/50% 50% no-repeat,linear-gradient(to top right,transparent 50%,#FFDF00 0) 0 100%/50% 50% no-repeat,linear-gradient(to top left,transparent 50%,#FFDF00 0) 100% 100%/50% 50% no-repeat,#009C3B',
+    desc:'A Brazilian lot from the Bob-o-link project. Smooth, nutty and chocolate-forward, easy to love as espresso or with milk.',
+    notes:['Milk chocolate','Hazelnut','Caramel'], profile:{ Acidity:30, Body:80, Sweetness:75 }, price:'$16', weight:'250 g',
+    theme:{ stage:'#1E1714', panel:'#2B221D', ink:'#F2E6D4', accent:'#E3B94F', bean:'#9A6A45', word:'rgba(227,185,79,.10)' },
+    bag:{ body:'#1D5A3C', label:'#E3B94F', labelInk:'#10261A' },
+    images:{ bag:'img/brazil-bag.png', bg:'img/brazil-bg.jpg', beans:'medium' } },
+  { country:'El Salvador', origin:'EL SALVADOR', region:'Las Isabelas', title:'Las Isabelas Natural', roast:'Light Roast', process:'Natural',
+    flag:'radial-gradient(circle,#E8C547 0 11%,transparent 12%),linear-gradient(#0F47AF 0 33.4%,#FFFFFF 0 66.6%,#0F47AF 0)',
+    desc:'A natural-process lot from Las Isabelas in El Salvador, dried inside the cherry for a juicy, fruit-forward cup with a syrupy body.',
+    notes:['Red berries','Plum','Cacao'], profile:{ Acidity:65, Body:60, Sweetness:90 }, price:'$19', weight:'250 g',
+    theme:{ stage:'#AFC6DA', panel:'#DDE7F0', ink:'#132433', accent:'#2F5E8C', bean:'#5A3A24', word:'rgba(47,94,140,.17)' },
+    bag:{ body:'#F1EBDD', label:'#2F5E8C', labelInk:'#F1EBDD' },
+    images:{ bag:'img/elsalvador-bag.png', bg:'img/elsalvador-bg.jpg', beans:'light' } },
+];
+
+/* scene geometry (720×840 design space of the left half) */
+const W = 720, H = 840;
+const BAG = { y:170, h:560, cx:360, cy:450 };
+const BEAN_SPRITES = 9;       // img/beans-<roast>-1..N.png from tools/slice_beans.py
+const BEANS = [[-250,-190,34,.6],[215,-250,26,.4],[275,60,40,.9],[-265,150,28,.5],[190,265,46,1],[-150,305,22,.35],[40,-330,20,.3],[300,-120,18,.25]];
+
+/* ===================================================================== */
+const $ = id => document.getElementById(id);
+const root = $('cs'), stage = $('stage'), panel = $('panel'), panelWipe = $('panelWipe'), docEl = document.documentElement;
+const N = ORIGINS.length;
+const pad = n => String(n).padStart(2, '0');
+const esc = s => s.replace(/&/g, '&amp;');
+
+const q = new URLSearchParams(location.search);
+if (parseFloat(q.get('slow')) > 0) gsap.globalTimeline.timeScale(1 / parseFloat(q.get('slow'))); // ?slow=5 to study motion
+$('brand').textContent = BRAND;
+
+function bagSVG(o, i) {
+  const c = o.bag, id = 'g' + i;
+  const body = 'M22 58 Q12 260 20 468 Q22 492 46 494 L294 494 Q318 492 320 468 Q328 260 318 58 Z';
+  return `<svg viewBox="0 0 340 500" aria-hidden="true">
+    <defs>
+      <linearGradient id="${id}s" x1="0" x2="1">
+        <stop offset="0" stop-color="#000" stop-opacity=".38"/><stop offset=".12" stop-color="#000" stop-opacity=".06"/>
+        <stop offset=".42" stop-color="#fff" stop-opacity=".14"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/>
+        <stop offset=".9" stop-color="#000" stop-opacity=".14"/><stop offset="1" stop-color="#000" stop-opacity=".42"/>
+      </linearGradient>
+      <pattern id="${id}c" width="6" height="10" patternUnits="userSpaceOnUse"><rect width="3" height="10" fill="#000" fill-opacity=".16"/></pattern>
+    </defs>
+    <path d="${body}" fill="${c.body}" stroke="rgba(255,255,255,.08)"/>
+    <rect x="16" y="12" width="308" height="56" rx="5" fill="${c.body}"/>
+    <rect x="16" y="12" width="308" height="56" rx="5" fill="url(#${id}c)"/>
+    <path d="${body}" fill="url(#${id}s)"/>
+    <rect x="16" y="12" width="308" height="56" rx="5" fill="url(#${id}s)"/>
+    <line x1="20" y1="68" x2="320" y2="68" stroke="#000" stroke-opacity=".22" stroke-width="2"/>
+    <circle cx="170" cy="112" r="12" fill="#000" fill-opacity=".2"/>
+    <circle cx="170" cy="112" r="6.5" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="2"/>
+    <path d="M96 84 Q86 280 98 474" stroke="#fff" stroke-opacity=".12" stroke-width="16" fill="none" stroke-linecap="round"/>
+    <rect x="56" y="160" width="228" height="258" rx="12" fill="${c.label}"/>
+    <g fill="${c.labelInk}" text-anchor="middle">
+      <text x="170" y="198" font-family="Inter,sans-serif" font-weight="600" font-size="11" letter-spacing="3.5">${esc(BRAND.toUpperCase())}</text>
+      <rect x="120" y="212" width="100" height="1.5" opacity=".35"/>
+      <text x="170" y="282" font-family="Anton,Impact,sans-serif" font-size="${o.origin.length > 8 ? 40 : 50}"${o.origin.length > 7 ? ' textLength="196" lengthAdjust="spacingAndGlyphs"' : ''}>${o.origin}</text>
+      <text x="170" y="312" font-family="'DM Serif Display',Georgia,serif" font-style="italic" font-size="16">${o.title}</text>
+      <text x="170" y="366" font-family="Inter,sans-serif" font-weight="600" font-size="9.5" letter-spacing="2.2">${o.roast.toUpperCase()}</text>
+      <text x="170" y="396" font-family="Inter,sans-serif" font-size="10.5" letter-spacing="1.5" opacity=".75">${o.weight.toUpperCase()} · WHOLE BEAN</text>
+    </g>
+    <rect x="110" y="349" width="120" height="26" rx="13" fill="none" stroke="${c.labelInk}" stroke-width="1.2"/>
+    <path d="M28 472 Q170 452 312 472" stroke="#000" stroke-opacity=".22" stroke-width="2" fill="none"/>
+  </svg>`;
+}
+
+/* ---------- build ---------- */
+const slides = ORIGINS.map((o, i) => {
+  const t = o.theme, flip = i % 2 ? -1 : 1;
+
+  const el = document.createElement('div');
+  el.className = 'cs-slide';
+  el.innerHTML = `
+    <div class="cs-bg" style="background-color:${t.stage};${o.images.bg ? `background-image:url('${o.images.bg}')` : ''}"></div>
+    <div class="cs-scene">
+      <div class="word" style="--wordc:${t.word}">${[...o.origin].map(ch => `<span class="ch"><span>${ch === ' ' ? '&nbsp;' : ch}</span></span>`).join('')}</div>
+      <div class="shadow"></div>
+      ${BEANS.map(([dx, dy, sz, depth], j) => `<div class="bean${depth < .4 ? ' far' : ''}" style="left:${BAG.cx + dx * flip}px;top:${BAG.cy + dy}px"><div class="bean-p">
+        ${o.images.beans ? `<img src="img/beans-${o.images.beans}-${(j + i * 2) % BEAN_SPRITES + 1}.png" alt="" style="width:${Math.round(sz * 1.6)}px">` : `<svg width="${sz}" height="${sz * 1.3}" viewBox="0 0 20 26"><ellipse cx="10" cy="13" rx="9" ry="12" fill="${t.bean}"/><path d="M10 2c-4 5 4 17 0 22" stroke="rgba(0,0,0,.4)" stroke-width="1.6" fill="none"/></svg>`}</div></div>`).join('')}
+      <div class="bag"><div class="bag-p"><div class="bag-f">${o.images.bag ? `<img src="${o.images.bag}" alt="${o.title} coffee bag">` : bagSVG(o, i)}</div></div></div>
+      <div class="badge" aria-hidden="true" style="color:${t.ink}">
+        <svg viewBox="0 0 120 120"><defs><path id="ring${i}" d="M60,60 m-47,0 a47,47 0 1,1 94,0 a47,47 0 1,1 -94,0"/></defs>
+          <text font-family="Inter,sans-serif" font-size="9.5" font-weight="600" letter-spacing="2.6" fill="currentColor"><textPath href="#ring${i}">FRESHLY ROASTED • SMALL BATCH • </textPath></text></svg>
+        <span class="badge-core" style="background:${t.accent}"><svg viewBox="0 0 20 26"><ellipse cx="10" cy="13" rx="9" ry="12" fill="${t.panel}"/><path d="M10 2c-4 5 4 17 0 22" stroke="${t.accent}" stroke-width="1.8" fill="none"/></svg></span>
+      </div>
+    </div>`;
+  stage.appendChild(el);
+
+  const text = document.createElement('div');
+  text.className = 'cs-text';
+  const words = o.title.split(' ');
+  text.innerHTML = `
+    <div class="cs-count" aria-hidden="true">
+      <span class="m m-n1"><i data-y="50">${pad(i + 1)}</i></span>
+      <span class="m m-ln"><i class="ln" data-x="35" data-y="35"></i></span>
+      <span class="m m-n2"><i data-y="50">${pad(N)}</i></span>
+    </div>
+    <div class="m cs-eyebrow"><span data-y="40">${o.region ? o.region + ', ' : ''}${o.country} · ${o.roast}</span></div>
+    <h2 class="m cs-title"><span data-y="100">${words.slice(0, -1).join(' ')} <em>${words[words.length - 1]}</em></span></h2>
+    <p class="m cs-desc"><span data-y="150">${o.desc}</span></p>
+    <ul class="cs-notes">${o.notes.map(n => `<li>${n}</li>`).join('')}</ul>
+    <div class="cs-bars">${Object.entries(o.profile).map(([k, v]) => `<div class="bar"><span>${k}</span><span class="bar-t"><i data-v="${v / 100}"></i></span><span>${v}</span></div>`).join('')}</div>
+    <div class="m cs-buy"><div class="cs-buy-in" data-y="200"><div class="price">${o.price}<small>/ ${o.weight}</small></div>
+      <a class="cs-btn" href="#">Shop ${o.country} <svg viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></a></div></div>`;
+  $('copy').appendChild(text);
+
+  const org = document.createElement('button');
+  org.className = 'org';
+  org.setAttribute('aria-label', `${o.country}: ${o.title}`);
+  org.innerHTML = `<svg class="org-ring" viewBox="0 0 54 54"><circle cx="27" cy="27" r="25.5" pathLength="1"/></svg>
+    <span class="org-flag" style="background:${o.flag}"></span><span class="org-label">${o.country}</span>`;
+  org.addEventListener('click', () => go(i));
+  $('origins').appendChild(org);
+
+  const s = {
+    el, bg:el.querySelector('.cs-bg'), word:el.querySelector('.word'), chars:el.querySelectorAll('.ch > span'),
+    shadow:el.querySelector('.shadow'), badge:el.querySelector('.badge'),
+    bag:el.querySelector('.bag'), bagP:el.querySelector('.bag-p'), bagF:el.querySelector('.bag-f'),
+    beans:[...el.querySelectorAll('.bean')].map((b, j) => ({ el:b, p:b.firstElementChild, dx:BEANS[j][0] * flip, dy:BEANS[j][1], depth:BEANS[j][3], r:(j * 57 + i * 40) % 360 })),
+    text, lines:[...text.querySelectorAll('[data-y]')], chips:text.querySelectorAll('.cs-notes li'), rows:text.querySelectorAll('.bar'), bars:text.querySelectorAll('.bar-t i'),
+    org, ring:org.querySelector('circle'),
+  };
+  s.beans.forEach(b => gsap.set(b.el, { xPercent:-50, yPercent:-50, rotation:b.r, autoAlpha:0 }));
+  gsap.to(s.bagF, { y:-12, duration:2.6 + i * .3, ease:'sine.inOut', yoyo:true, repeat:-1 });
+  gsap.set(s.text, { autoAlpha:0 });
+  gsap.set(s.chars, { yPercent:105 });
+  gsap.set(s.word, { yPercent:-50 });
+  gsap.set([s.shadow, s.badge], { scale:0 });
+  gsap.set(s.bag, { y:-(BAG.y + BAG.h + 160) });
+
+  const qt = (node, p) => gsap.quickTo(node, p, { duration:1, ease:'power3' });
+  s.par = { bx:qt(s.bagP, 'x'), by:qt(s.bagP, 'y'), wx:qt(s.word, 'x'), wy:qt(s.word, 'y'),
+            beans:s.beans.map(b => ({ x:qt(b.p, 'x'), y:qt(b.p, 'y') })) };
+  return s;
+});
+
+/* ---------- choreography ---------- */
+const above = BAG.y + BAG.h + 160, below = H - BAG.y + 160;
+
+function stageIn(s, dir, D = 0) {
+  gsap.fromTo(s.bag, { y:dir > 0 ? -above : below, rotation:90 }, { y:0, rotation:0, duration:1.4, ease:'power3.inOut', delay:D + .1, overwrite:true });
+  gsap.fromTo(s.bagF, { rotation:0 }, { keyframes:[{ rotation:-6 * dir, duration:.35, ease:'power2.out' }, { rotation:0, duration:1.3, ease:'elastic.out(1,.35)' }], delay:D + 1.35, overwrite:'auto' });
+  gsap.fromTo(s.chars, { yPercent:105 * dir }, { yPercent:0, duration:1.1, ease:'power4.out', stagger:.045, delay:D + .55, overwrite:true });
+  gsap.fromTo(s.shadow, { scale:.5, autoAlpha:0 }, { scale:1, autoAlpha:1, duration:1.2, ease:'power2.inOut', delay:D + .75, overwrite:true });
+  s.beans.forEach((b, j) => gsap.fromTo(b.el,
+    { x:-b.dx, y:-b.dy, scale:0, rotation:b.r - 220, autoAlpha:1 },
+    { x:0, y:0, scale:1, rotation:b.r, duration:1.4, ease:'expo.out', delay:D + 1.05 + j * .035, overwrite:true }));
+  gsap.fromTo(s.badge, { scale:0, rotation:-120 }, { scale:1, rotation:0, duration:1.1, ease:'back.out(1.7)', delay:D + 1.2, overwrite:true });
+}
+function stageOut(s, dir) {
+  gsap.to(s.bag, { y:dir > 0 ? below : -above, rotation:-90, duration:1.5, ease:'power3.inOut', overwrite:true });
+  gsap.to(s.beans.map(b => b.el), { y:'+=' + 700 * dir, rotation:'+=160', autoAlpha:0, duration:.8, ease:'power2.in', stagger:.02, overwrite:true });
+  gsap.to(s.shadow, { autoAlpha:0, duration:.8, ease:'power4.inOut', overwrite:true });
+  gsap.to(s.badge, { scale:0, rotation:120, duration:.45, ease:'power2.in', overwrite:true });
+  gsap.to(s.chars, { yPercent:-105 * dir, duration:.7, ease:'power3.in', stagger:.03, overwrite:true });
+}
+function textIn(s, dir, D = 0) {
+  gsap.fromTo(s.text, { y:100 * dir, autoAlpha:0 }, { y:0, autoAlpha:1, duration:1, ease:'power1.inOut', delay:D, overwrite:true });
+  s.lines.forEach(n => gsap.fromTo(n, { x:+(n.dataset.x || 0), y:+n.dataset.y * dir }, { x:0, y:0, duration:1, ease:'power4.inOut', delay:D + .1, overwrite:true }));
+  gsap.fromTo(s.chips, { scale:.6, autoAlpha:0 }, { scale:1, autoAlpha:1, duration:.7, ease:'back.out(2)', stagger:.07, delay:D + .55, overwrite:true });
+  gsap.fromTo(s.rows, { x:-18, autoAlpha:0 }, { x:0, autoAlpha:1, duration:.6, ease:'power3.out', stagger:.08, delay:D + .6, overwrite:true });
+  s.bars.forEach((b, k) => gsap.fromTo(b, { scaleX:0 }, { scaleX:+b.dataset.v, duration:1.3, ease:'power3.out', delay:D + .75 + k * .1, overwrite:true }));
+}
+function textOut(s, dir) {
+  gsap.to(s.text, { y:-200 * dir, autoAlpha:0, duration:.6, ease:'power2.inOut', overwrite:true });
+}
+
+let cur = 0, busy = false, prog = null;
+
+function go(next, dir) {
+  next = (next + N) % N;
+  if (busy || next === cur) return;
+  if (dir === undefined) dir = next > cur ? 1 : -1;
+  busy = true;
+
+  const from = slides[cur], to = slides[next], t = ORIGINS[next].theme;
+  cur = next;
+  slides.forEach((s, i) => { s.el.style.zIndex = 1; s.org.classList.toggle('is-active', i === next); });
+  from.el.style.zIndex = 2;
+  to.el.style.zIndex = 3;
+  to.el.style.visibility = 'visible';
+
+  gsap.fromTo(to.bg, { yPercent:-100 * dir }, { yPercent:0, duration:1.5, ease:'power4.inOut', overwrite:true });
+  stageOut(from, dir);
+  stageIn(to, dir);
+  textOut(from, dir);
+  textIn(to, dir);
+
+  panelWipe.style.backgroundColor = t.panel;
+  gsap.fromTo(panelWipe, { yPercent:-100 * dir }, { yPercent:0, duration:1, ease:'power3.inOut', overwrite:true,
+    onComplete:() => { panel.style.backgroundColor = t.panel; gsap.set(panelWipe, { yPercent:-101 }); } });
+  gsap.to(docEl, { '--ink':t.ink, '--accent':t.accent, '--panel':t.panel, duration:.9, delay:.3, ease:'power2.inOut', overwrite:true });
+
+  startAuto(1.6);
+  gsap.delayedCall(1.5, () => {
+    if (slides[cur] !== from) from.el.style.visibility = 'hidden';
+    busy = false;
+  });
+}
+const next = () => go(cur + 1, 1);
+const prev = () => go(cur - 1, -1);
+
+function startAuto(delay) {
+  if (prog) prog.kill();
+  slides.forEach(s => gsap.set(s.ring, { strokeDashoffset:1 }));
+  if (!AUTOPLAY) return;
+  prog = gsap.fromTo(slides[cur].ring, { strokeDashoffset:1 }, { strokeDashoffset:0, duration:AUTOPLAY, ease:'none', delay, onComplete:() => go(cur + 1, 1) });
+}
+document.addEventListener('visibilitychange', () => { if (prog) document.hidden ? prog.pause() : prog.resume(); });
+
+/* ---------- intro ---------- */
+const t0 = ORIGINS[0].theme;
+gsap.set(docEl, { '--ink':t0.ink, '--accent':t0.accent, '--panel':t0.panel });
+panel.style.backgroundColor = t0.panel;
+slides[0].el.style.visibility = 'visible';
+slides[0].el.style.zIndex = 3;
+slides[0].org.classList.add('is-active');
+stageIn(slides[0], 1, .2);
+textIn(slides[0], 1, .3);
+startAuto(2);
+
+/* ---------- scale scene to cover the left half ---------- */
+function fit() {
+  const r = stage.getBoundingClientRect();
+  stage.style.setProperty('--s', Math.max(r.width / W, r.height / H));
+}
+fit();
+addEventListener('resize', fit);
+
+/* shrink long country words (e.g. EL SALVADOR) so they fit the 720px scene */
+document.fonts.ready.then(() => slides.forEach(s => {
+  const w = [...s.word.children].reduce((sum, ch) => sum + ch.offsetWidth, 0);
+  if (w > 660) s.word.style.fontSize = (190 * 660 / w) + 'px';
+}));
+
+/* ---------- interaction ---------- */
+root.addEventListener('pointermove', e => {
+  if (e.pointerType !== 'mouse') return;
+  const nx = e.clientX / innerWidth - .5, ny = e.clientY / innerHeight - .5, p = slides[cur].par;
+  p.bx(nx * -30); p.by(ny * -20);
+  p.wx(nx * 44); p.wy(ny * 20);
+  slides[cur].beans.forEach((b, j) => { p.beans[j].x(nx * 80 * b.depth); p.beans[j].y(ny * 56 * b.depth); });
+});
+
+$('next').addEventListener('click', next);
+$('prev').addEventListener('click', prev);
+
+let lastWheel = 0;
+root.addEventListener('wheel', e => {
+  e.preventDefault();
+  const now = performance.now();
+  if (Math.abs(e.deltaY) < 10 || now - lastWheel < 1400) return;
+  lastWheel = now;
+  e.deltaY > 0 ? next() : prev();
+}, { passive:false });
+
+addEventListener('keydown', e => {
+  if (['ArrowDown', 'ArrowRight', 'PageDown'].includes(e.key)) { e.preventDefault(); next(); }
+  if (['ArrowUp', 'ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); prev(); }
+});
+
+let touchY = null;
+root.addEventListener('touchstart', e => { touchY = e.touches[0].clientY; }, { passive:true });
+root.addEventListener('touchend', e => {
+  if (touchY === null) return;
+  const dy = touchY - e.changedTouches[0].clientY;
+  if (Math.abs(dy) > 50) dy > 0 ? next() : prev();
+  touchY = null;
+}, { passive:true });
+
+window.originSlider = { next, prev, go };
+</script>
+</body>
+</html>

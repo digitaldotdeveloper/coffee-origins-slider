@@ -1,0 +1,8 @@
+# raw Gemini renders, review screenshots and publish staging: large and local-only
+gen/
+shots/
+publish/
+# the user's sample bag photos
+ref/
+*.bak-*
+__pycache__/
