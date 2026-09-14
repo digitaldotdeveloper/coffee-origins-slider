@@ -102,5 +102,26 @@ All four slides now use designed bags rendered by Gemini Studio, built on the tw
 - `tools/gen_beans.js [light|medium]`: queue a 3×3 bean sheet.
 - `tools/slice_beans.py <gen> img/beans-<roast>`: cut a sheet into sprites in reading order. If a sheet gives a different count, change `BEAN_SPRITES` in `index.html`.
 - `tools/studio.js`: the shared Gemini Studio runner the three `gen_*` scripts use.
+
+## Image pipeline and loading speed
+
+The site loads **WebP only**, from `img/`. The PNG/JPG masters live in `art/`, which stays on this PC and out of git. Write new cutouts, graded backgrounds and bean sprites into `art/`, then run:
+
+```
+python tools/optimize.py
+```
+
+| Image | Size | Why |
+|---|---|---|
+| `<origin>-bag.webp` | native (~450×800) | phones show the bag about 300 css px tall at 3×, so it needs the full size |
+| `<origin>-bg.webp` | 1400 px | desktop |
+| `<origin>-bg-m.webp` | 800 px | phones; it's a soft photo, so the loss doesn't show |
+| `beans-<roast>-N.webp` | 160 px max | the largest bean displays at 74 css px |
+
+How the page loads:
+- The first slide's bag and background are preloaded in `<head>`, and phones get the `-m` background.
+- ⚠️ If you reorder `ORIGINS`, change those preload links too.
+- Every other slide's images wait until the page has loaded, then fill in while the browser is idle (`hydrate()` in the script). Changing slides also loads that slide first, in case it's still waiting.
+- On phones the bag and bean shadows use smaller blurs, which cost much less to animate.
 - `index.html.bak-svgbeans`: the version before backgrounds and bean sprites.
 - **Study the motion:** open `index.html?slow=5` to play the animations at ⅕ speed.

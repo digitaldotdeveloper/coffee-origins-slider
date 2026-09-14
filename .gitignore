@@ -2,6 +2,8 @@
 gen/
 shots/
 publish/
+# PNG/JPG masters; the site loads the WebPs tools/optimize.py builds from them into img/
+art/
 # the user's sample bag photos
 ref/
 *.bak-*

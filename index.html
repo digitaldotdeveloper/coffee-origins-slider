@@ -4,6 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Coffee Origins Split Slider</title>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<!-- first slide (ORIGINS[0]) images: keep in step if the order changes -->
+<link rel="preload" as="image" href="img/ethiopia-bag.webp" fetchpriority="high">
+<link rel="preload" as="image" href="img/ethiopia-bg.webp" media="(min-width: 861px)">
+<link rel="preload" as="image" href="img/ethiopia-bg-m.webp" media="(max-width: 860px)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -113,6 +118,9 @@
   .cs-arrow svg{width:14px;height:38px}
 
   @media (max-width:860px){
+    .bag svg,.bag img{filter:drop-shadow(0 16px 18px rgba(0,0,0,.26))}
+    .bean svg,.bean img{filter:drop-shadow(0 3px 3px rgba(0,0,0,.22))}
+    .bean.far img{filter:blur(1px)}
     .cs-stage{width:100%;height:52%}
     .cs-panel{top:52%;width:100%;height:48%}
     .cs-copy{left:22px;right:22px;width:auto;top:44px;transform:none}
@@ -184,34 +192,34 @@ const ORIGINS = [
     notes:['Jasmine','Lemon zest','Honey'], profile:{ Acidity:85, Body:35, Sweetness:70 }, price:'$18', weight:'250 g',
     theme:{ stage:'#EBCFA6', panel:'#F4E6D2', ink:'#2A1A12', accent:'#C4512E', bean:'#6B3A22', word:'rgba(196,81,46,.17)' },
     bag:{ body:'#D9643A', label:'#F7ECDD', labelInk:'#3A2016' },
-    images:{ bag:'img/ethiopia-bag.png', bg:'img/ethiopia-bg.jpg', beans:'light' } },
+    images:{ bag:'img/ethiopia-bag.webp', bg:'img/ethiopia-bg.webp', beans:'light' } },
   { country:'Colombia', origin:'COLOMBIA', region:'Finca Monteblanco', title:'Monteblanco Geisha', roast:'Light Roast', process:'Geisha',
     flag:'linear-gradient(#FCD116 0 50%,#003893 0 75%,#CE1126 0)',
     desc:'Geisha grown at Finca Monteblanco in Colombia: a delicate, perfumed variety prized for its tea-like body and long, sweet finish.',
     notes:['Bergamot','Peach','Rose'], profile:{ Acidity:75, Body:40, Sweetness:85 }, price:'$24', weight:'250 g',
     theme:{ stage:'#B8CCB2', panel:'#DEE8D9', ink:'#14251E', accent:'#1F5A46', bean:'#5A3A24', word:'rgba(31,90,70,.16)' },
     bag:{ body:'#1F5A46', label:'#EBDAB8', labelInk:'#16291F' },
-    images:{ bag:'img/colombia-bag.png', bg:'img/colombia-bg.jpg', beans:'light' } },
+    images:{ bag:'img/colombia-bag.webp', bg:'img/colombia-bg.webp', beans:'light' } },
   { country:'Brazil', origin:'BRAZIL', region:'', title:'Yellow Bob-o-link', roast:'Medium Roast', process:'Natural',
     flag:'radial-gradient(circle,#002776 0 19%,transparent 20%),linear-gradient(to bottom right,transparent 50%,#FFDF00 0) 0 0/50% 50% no-repeat,linear-gradient(to bottom left,transparent 50%,#FFDF00 0) 100% 0/50% 50% no-repeat,linear-gradient(to top right,transparent 50%,#FFDF00 0) 0 100%/50% 50% no-repeat,linear-gradient(to top left,transparent 50%,#FFDF00 0) 100% 100%/50% 50% no-repeat,#009C3B',
     desc:'A Brazilian lot from the Bob-o-link project. Smooth, nutty and chocolate-forward, easy to love as espresso or with milk.',
     notes:['Milk chocolate','Hazelnut','Caramel'], profile:{ Acidity:30, Body:80, Sweetness:75 }, price:'$16', weight:'250 g',
     theme:{ stage:'#1E1714', panel:'#2B221D', ink:'#F2E6D4', accent:'#E3B94F', bean:'#9A6A45', word:'rgba(227,185,79,.10)' },
     bag:{ body:'#1D5A3C', label:'#E3B94F', labelInk:'#10261A' },
-    images:{ bag:'img/brazil-bag.png', bg:'img/brazil-bg.jpg', beans:'medium' } },
+    images:{ bag:'img/brazil-bag.webp', bg:'img/brazil-bg.webp', beans:'medium' } },
   { country:'El Salvador', origin:'EL SALVADOR', region:'Las Isabelas', title:'Las Isabelas Natural', roast:'Light Roast', process:'Natural',
     flag:'radial-gradient(circle,#E8C547 0 11%,transparent 12%),linear-gradient(#0F47AF 0 33.4%,#FFFFFF 0 66.6%,#0F47AF 0)',
     desc:'A natural-process lot from Las Isabelas in El Salvador, dried inside the cherry for a juicy, fruit-forward cup with a syrupy body.',
     notes:['Red berries','Plum','Cacao'], profile:{ Acidity:65, Body:60, Sweetness:90 }, price:'$19', weight:'250 g',
     theme:{ stage:'#AFC6DA', panel:'#DDE7F0', ink:'#132433', accent:'#2F5E8C', bean:'#5A3A24', word:'rgba(47,94,140,.17)' },
     bag:{ body:'#F1EBDD', label:'#2F5E8C', labelInk:'#F1EBDD' },
-    images:{ bag:'img/elsalvador-bag.png', bg:'img/elsalvador-bg.jpg', beans:'light' } },
+    images:{ bag:'img/elsalvador-bag.webp', bg:'img/elsalvador-bg.webp', beans:'light' } },
 ];
 
 /* scene geometry (720×840 design space of the left half) */
 const W = 720, H = 840;
 const BAG = { y:170, h:560, cx:360, cy:450 };
-const BEAN_SPRITES = 9;       // img/beans-<roast>-1..N.png from tools/slice_beans.py
+const BEAN_SPRITES = 9;       // img/beans-<roast>-1..N.webp (slice_beans.py -> art/, then optimize.py)
 const BEANS = [[-250,-190,34,.6],[215,-250,26,.4],[275,60,40,.9],[-265,150,28,.5],[190,265,46,1],[-150,305,22,.35],[40,-330,20,.3],[300,-120,18,.25]];
 
 /* ===================================================================== */
@@ -267,13 +275,13 @@ const slides = ORIGINS.map((o, i) => {
   const el = document.createElement('div');
   el.className = 'cs-slide';
   el.innerHTML = `
-    <div class="cs-bg" style="background-color:${t.stage};${o.images.bg ? `background-image:url('${o.images.bg}')` : ''}"></div>
+    <div class="cs-bg" style="background-color:${t.stage}"></div>
     <div class="cs-scene">
       <div class="word" style="--wordc:${t.word}">${[...o.origin].map(ch => `<span class="ch"><span>${ch === ' ' ? '&nbsp;' : ch}</span></span>`).join('')}</div>
       <div class="shadow"></div>
       ${BEANS.map(([dx, dy, sz, depth], j) => `<div class="bean${depth < .4 ? ' far' : ''}" style="left:${BAG.cx + dx * flip}px;top:${BAG.cy + dy}px"><div class="bean-p">
-        ${o.images.beans ? `<img src="img/beans-${o.images.beans}-${(j + i * 2) % BEAN_SPRITES + 1}.png" alt="" style="width:${Math.round(sz * 1.6)}px">` : `<svg width="${sz}" height="${sz * 1.3}" viewBox="0 0 20 26"><ellipse cx="10" cy="13" rx="9" ry="12" fill="${t.bean}"/><path d="M10 2c-4 5 4 17 0 22" stroke="rgba(0,0,0,.4)" stroke-width="1.6" fill="none"/></svg>`}</div></div>`).join('')}
-      <div class="bag"><div class="bag-p"><div class="bag-f">${o.images.bag ? `<img src="${o.images.bag}" alt="${o.title} coffee bag">` : bagSVG(o, i)}</div></div></div>
+        ${o.images.beans ? `<img data-src="img/beans-${o.images.beans}-${(j + i * 2) % BEAN_SPRITES + 1}.webp" alt="" decoding="async" style="width:${Math.round(sz * 1.6)}px">` : `<svg width="${sz}" height="${sz * 1.3}" viewBox="0 0 20 26"><ellipse cx="10" cy="13" rx="9" ry="12" fill="${t.bean}"/><path d="M10 2c-4 5 4 17 0 22" stroke="rgba(0,0,0,.4)" stroke-width="1.6" fill="none"/></svg>`}</div></div>`).join('')}
+      <div class="bag"><div class="bag-p"><div class="bag-f">${o.images.bag ? `<img data-src="${o.images.bag}" alt="${o.title} coffee bag" decoding="async"${i === 0 ? ' fetchpriority="high"' : ''}>` : bagSVG(o, i)}</div></div></div>
       <div class="badge" aria-hidden="true" style="color:${t.ink}">
         <svg viewBox="0 0 120 120"><defs><path id="ring${i}" d="M60,60 m-47,0 a47,47 0 1,1 94,0 a47,47 0 1,1 -94,0"/></defs>
           <text font-family="Inter,sans-serif" font-size="9.5" font-weight="600" letter-spacing="2.6" fill="currentColor"><textPath href="#ring${i}">FRESHLY ROASTED • SMALL BATCH • </textPath></text></svg>
@@ -330,6 +338,20 @@ const slides = ORIGINS.map((o, i) => {
   return s;
 });
 
+/* ---------- image loading ----------
+   Only the slide on screen loads straight away; the rest load once the page is up,
+   and go() loads a slide before showing it in case that hasn't happened yet.
+   Phones get the 800px background (-m.webp) instead of the 1400px one. */
+const MOBILE = matchMedia('(max-width: 860px)').matches;
+function hydrate(i) {
+  const s = slides[i], o = ORIGINS[i];
+  if (s.hydrated) return;
+  s.hydrated = true;
+  if (o.images.bg) s.bg.style.backgroundImage = `url('${MOBILE ? o.images.bg.replace(/\.webp$/, '-m.webp') : o.images.bg}')`;
+  s.el.querySelectorAll('img[data-src]').forEach(img => { img.src = img.dataset.src; img.removeAttribute('data-src'); });
+}
+addEventListener('load', () => (window.requestIdleCallback || setTimeout)(() => slides.forEach((_, i) => hydrate(i))));
+
 /* ---------- choreography ---------- */
 const above = BAG.y + BAG.h + 160, below = H - BAG.y + 160;
 
@@ -368,6 +390,7 @@ function go(next, dir) {
   if (busy || next === cur) return;
   if (dir === undefined) dir = next > cur ? 1 : -1;
   busy = true;
+  hydrate(next);
 
   const from = slides[cur], to = slides[next], t = ORIGINS[next].theme;
   cur = next;
@@ -405,6 +428,7 @@ function startAuto(delay) {
 document.addEventListener('visibilitychange', () => { if (prog) document.hidden ? prog.pause() : prog.resume(); });
 
 /* ---------- intro ---------- */
+hydrate(0);
 const t0 = ORIGINS[0].theme;
 gsap.set(docEl, { '--ink':t0.ink, '--accent':t0.accent, '--panel':t0.panel });
 panel.style.backgroundColor = t0.panel;
